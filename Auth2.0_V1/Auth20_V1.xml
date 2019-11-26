@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Auth20_V1</name>
+    </assembly>
+    <members>
+        <member name="M:Auth20_V1.Controllers.TestController.Get">
+            <summary>
+            Deletes a specific TodoItem.
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:Auth20_V1.Controllers.v1.UsersController.Get">
+            <summary>
+            Deletes a specific TodoItem.
+            </summary>
+            <param name="id"></param>
+        </member>
+    </members>
+</doc>
