@@ -85,38 +85,6 @@ namespace App.Core.Abstract
 
             return await GenerateAuthenticationResultForUserAsync(newUser);
 
-           /* var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_JwtSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims: new[]
-                {
-                    new Claim(type: JwtRegisteredClaimNames.Sub, value: newUser.Email),
-                    new Claim(type: JwtRegisteredClaimNames.Jti, value: Guid.NewGuid().ToString()),
-                    new Claim(type: JwtRegisteredClaimNames.Email, value: newUser.Email),
-                }),
-                NotBefore= new DateTimeOffset(DateTime.Now).DateTime,
-                Expires = DateTime.Now.AddHours(2),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), algorithm: SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            try
-            {
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-                return new AuthenticationResult
-                {
-                    Success = true,
-                    Token = tokenHandler.WriteToken(token)
-                };
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }*/
-          
-            
-
         }
 
         private async Task<AuthenticationResult> GenerateAuthenticationResultForUserAsync(ApplicationUser user)
@@ -154,6 +122,8 @@ namespace App.Core.Abstract
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Issuer= "https://localhost:5000/",
+                Audience = "demo",
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.Add(_JwtSettings.TokenLifetime),
                 SigningCredentials =
@@ -266,6 +236,22 @@ namespace App.Core.Abstract
             return (validatedToken is JwtSecurityToken jwtSecurityToken) &&
                    jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                        StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        public async Task<string> GetUser(string token)
+        {
+            try
+            {
+                var validatedToken = GetPrincipalFromToken(token);
+                var currentuser = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
+                return currentuser.UserName;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
+         
         }
 
 

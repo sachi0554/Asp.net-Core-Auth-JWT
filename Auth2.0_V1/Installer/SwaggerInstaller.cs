@@ -12,6 +12,7 @@ namespace Auth20_V1.Installer
     {
         public void InstallerService(IServiceCollection services, IConfiguration configuration)
         {
+            //register swagger 
             services.AddSwaggerGen(x =>
             {
                 x.SwaggerDoc("v1", new Info { Title = "Auth Api Testing", Version = "v1" });

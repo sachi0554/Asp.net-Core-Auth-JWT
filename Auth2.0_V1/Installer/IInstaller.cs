@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace Auth20_V1.Installer
 {
+
+    //contract IInstaller for register dependecy services and packages 
     public interface IInstaller
     {
         void InstallerService(IServiceCollection services, IConfiguration configuration);

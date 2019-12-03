@@ -13,19 +13,18 @@ namespace Auth20_V1.Installer
     {
         public void InstallerService(IServiceCollection services, IConfiguration configuration)
         {
-           
+            // context Register on IServiceCollection 
+
             services.AddDbContext<ApplicationContext>(options =>
               options.UseSqlServer(
                   configuration.GetConnectionString("DefaultConnection")));
-            /*  services.AddIdentity<ApplicationUser, IdentityRole>()*/
-          
-            /*   services.AddIdentityCore<ApplicationUser>()*/
+
+            //Register Idenity Services 
             services.AddDefaultIdentity<ApplicationUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>()
                .AddDefaultTokenProviders();
-          
-
+        
         }
     }
 }
