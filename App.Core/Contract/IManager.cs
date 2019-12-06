@@ -12,5 +12,6 @@ namespace App.Core.Contract
         Task<bool> AssignRole(string email, string role);
         Task<bool> RemoveRole(string email, string role);
         Task<bool> AddClaims(UserClaims userClaims);
+        Task<bool> AssignClaims(UserClaims userClaims);
     }
 }

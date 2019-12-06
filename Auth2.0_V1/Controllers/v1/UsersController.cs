@@ -29,9 +29,9 @@ namespace Auth20_V1.Controllers.v1
         {
             _identityService = identityService;
         }
-         
+
+        [Authorize]
         [HttpGet("api/RedisCacheTesting")]
-        [Cached(60)]
         public IActionResult Get()
         {
             var stopwatch = new Stopwatch();
@@ -42,7 +42,7 @@ namespace Auth20_V1.Controllers.v1
         }
 
         [Authorize]
-        [HttpGet("api/EmailByToken")]
+        [HttpGet("api/EmailTotoken")]
         public async Task<IActionResult> Test(string token)
         {
             try
@@ -59,7 +59,6 @@ namespace Auth20_V1.Controllers.v1
         }
 
         [HttpPost(ApiRoute.Users.Login)]
-  
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
             var authResponse = await _identityService.LoginAsync(request.Email, request.Password);
@@ -82,14 +81,7 @@ namespace Auth20_V1.Controllers.v1
         [HttpPost(ApiRoute.Users.Register)]
         public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new AuthFailedResponse
-                {
-                    Errors = ModelState.Values.SelectMany(x => x.Errors.Select(xx => xx.ErrorMessage))
-                });
-            }
-
+           
             var authResponse = await _identityService.RegisterAsync(request.Email, request.Password);
 
             if (!authResponse.Success)

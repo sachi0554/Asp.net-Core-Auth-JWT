@@ -92,6 +92,37 @@ namespace App.Core.Abstract
            
         }
 
+        public async Task<bool> AssignClaims(UserClaims userClaims)
+        {
+            try
+            {
+                ApplicationUser user = await _userManager.FindByEmailAsync(userClaims.Id);
+                if(user != null)
+                {
+                    var claims = await _userManager.GetClaimsAsync(user);
+                    var result = await _userManager.RemoveClaimsAsync(user, claims);
+                    if(!result.Succeeded)
+                    {
+                        return false;
+                    }
+                    var claim = new Claim(userClaims.ClaimName, userClaims.ClaimName);
+                    result = await _userManager.AddClaimAsync(user, claim);
+                    if(result.Succeeded)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+
+
+        }
+
 
     }
 }

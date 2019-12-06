@@ -33,8 +33,17 @@ namespace App.Core.Abstract
 
         public async Task<string> GetCachedResponseAsync(string cacheKey)
         {
-            var cachedResponse = await _distributedCache.GetStringAsync(cacheKey);
-            return string.IsNullOrEmpty(cachedResponse) ? null : cachedResponse;
+            try
+            {
+                var cachedResponse = await _distributedCache.GetStringAsync(cacheKey);
+                return string.IsNullOrEmpty(cachedResponse) ? null : cachedResponse;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+          
         }
     }
 }

@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Auth20_V1.Controllers.v1
 {
-    [Authorize(Roles = "Admin")]
+   
+    /*[Authorize(Roles  = "Admin")]*/
     public class ManagerController : Controller
     {
         private readonly IManager _manager;
@@ -18,7 +19,7 @@ namespace Auth20_V1.Controllers.v1
         {
             _manager = manager;
         }
-
+        [Authorize(Policy = "Crud")]
         [HttpPost("api/CreateRole")]
         public async Task<IActionResult> CreateRole(string roleName)
         {
@@ -34,7 +35,7 @@ namespace Auth20_V1.Controllers.v1
             
         }
 
-        [HttpPost("api/AddRole")]
+        [HttpPost("api/AssignRole")]
         public async Task<IActionResult> AddRole(string email, string role)
         {
             var result = await _manager.AssignRole(email , role);
@@ -71,6 +72,21 @@ namespace Auth20_V1.Controllers.v1
             if (result == true)
             {
                 return Ok(new { Message = "Claim created" });
+            }
+            else
+            {
+                return Ok(new { Message = "Something went wrong " });
+            }
+
+        }
+
+        [HttpPost("api/AssignClaim")]
+        public async Task<IActionResult> AssignClaim(UserClaims userClaims)
+        {
+            var result = await _manager.AssignClaims(userClaims);
+            if (result == true)
+            {
+                return Ok(new { Message = "Claim assign" });
             }
             else
             {

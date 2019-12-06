@@ -5,7 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using App.Core.Abstract;
 using App.Core.Contract;
+using Auth20_V1.customhandler;
+using Auth20_V1.filter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -24,15 +28,32 @@ namespace Auth20_V1.Installer
             //  DI for IdenityServices Class 
             services.AddScoped<IIdentityServices, IdentityServices>();
             services.AddScoped<IManager, Manager>();
-            services.AddMvc();
+            services.AddSingleton<IAuthorizationHandler, CustomHandler>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CustomCorss",
+                builder =>
+                {
+                    builder.WithOrigins("https://localhost:5000",
+                                        "http://www.localhost:5000")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                });
+            });
+            services.AddMvc(options =>
+              {
+                  options.Filters.Add<ValidationFilter>();
+                  
+              });
+       
             // TokenValidator Parameter 
             var tokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key: Encoding.ASCII.GetBytes(jwtSettings.Secret)),
-                ValidIssuer = "https://localhost:5000/",
-                ValidAudience = "demo",
+                ValidIssuer = jwtSettings.Issuer,
+                ValidAudience = jwtSettings.Audience,
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 RequireExpirationTime = true,
@@ -40,6 +61,8 @@ namespace Auth20_V1.Installer
                 ClockSkew = TimeSpan.Zero
             };
             services.AddSingleton(tokenValidationParameters);
+       
+            
 
             // add defualt authentication JwtBearerDefaults
             services.AddAuthentication(configureOptions: x =>
@@ -52,6 +75,7 @@ namespace Auth20_V1.Installer
                 
                 x.SaveToken = true;
                 x.TokenValidationParameters = tokenValidationParameters;
+            
             });
 
             // add authorization policy  
@@ -59,7 +83,10 @@ namespace Auth20_V1.Installer
             {
                 options.AddPolicy("AdministratorRole",
                      policy => policy.RequireRole("Administrator"));
+                options.AddPolicy("Crud", policy => policy.RequireClaim("Create"));
             });
+
+            
         }
     }
 }

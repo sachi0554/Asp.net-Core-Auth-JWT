@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using Auth20_V1.Installer;
 using Microsoft.IdentityModel.Logging;
+using Auth20_V1.customhandler;
 
 namespace Auth20_V1
 {
@@ -41,8 +42,9 @@ namespace Auth20_V1
                 IdentityModelEventSource.ShowPII = true;
             }
 
-
+            app.UseCors();
             app.UseHttpsRedirection();
+            /*app.UseMiddleware<CustomMiddleware>();*/
             app.UseAuthentication();
 
             // swagger configruation 

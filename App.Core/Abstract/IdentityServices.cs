@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using App.Domain;
 using System.Data.Entity;
 using System.Linq;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace App.Core.Abstract
 {
@@ -23,13 +25,15 @@ namespace App.Core.Abstract
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly JwtSettings _JwtSettings;
         private readonly ApplicationContext _context;
-        public IdentityServices(UserManager<ApplicationUser> userManager, JwtSettings jwtSettings, ApplicationContext context, RoleManager<IdentityRole> roleManager, TokenValidationParameters tokenValidationParameters)
+        private readonly IDistributedCache _responseCacheService;
+        public IdentityServices(UserManager<ApplicationUser> userManager, JwtSettings jwtSettings, ApplicationContext context, RoleManager<IdentityRole> roleManager, TokenValidationParameters tokenValidationParameters, IDistributedCache responseCacheService)
         {
             _userManager = userManager;
             _JwtSettings = jwtSettings;
             _context = context;
             _roleManager = roleManager;
             _tokenValidationParameters = tokenValidationParameters;
+            _responseCacheService = responseCacheService;
         }
 
         public async Task<AuthenticationResult> LoginAsync(string email, string password)
@@ -122,8 +126,8 @@ namespace App.Core.Abstract
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer= "https://localhost:5000/",
-                Audience = "demo",
+                Issuer= _JwtSettings.Issuer,
+                Audience = _JwtSettings.Audience,
                 Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.Add(_JwtSettings.TokenLifetime),
                 SigningCredentials =
@@ -142,13 +146,24 @@ namespace App.Core.Abstract
 
             await _context.RefreshTokens.AddAsync(refreshToken);
             await _context.SaveChangesAsync();
-
-            return new AuthenticationResult
+            var TokenResponse = new AuthenticationResult
             {
                 Success = true,
                 Token = tokenHandler.WriteToken(token),
                 RefreshToken = refreshToken.Token
             };
+
+            await _responseCacheService.SetStringAsync(token.Id, tokenHandler.WriteToken(token), new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.Parse(_JwtSettings.TokenLifetime.ToString())
+            }); 
+            /* return new AuthenticationResult
+             {
+                 Success = true,
+                 Token = tokenHandler.WriteToken(token),
+                 RefreshToken = refreshToken.Token
+             };*/
+            return TokenResponse;
         }
 
         public async Task<AuthenticationResult> RefreshTokenAsync(string token, string refreshToken)
@@ -208,6 +223,21 @@ namespace App.Core.Abstract
             return await GenerateAuthenticationResultForUserAsync(user);
         }
 
+        public async Task<string> GetUser(string token)
+        {
+            try
+            {
+                var validatedToken = GetPrincipalFromToken(token);
+                var currentuser = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "jti").Value);
+                return currentuser.UserName;
+            }
+            catch (Exception ex)
+            {
+
+                return ex.ToString();
+            }
+         
+        }
 
         private ClaimsPrincipal GetPrincipalFromToken(string token)
         {
@@ -237,24 +267,5 @@ namespace App.Core.Abstract
                    jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                        StringComparison.InvariantCultureIgnoreCase);
         }
-
-        public async Task<string> GetUser(string token)
-        {
-            try
-            {
-                var validatedToken = GetPrincipalFromToken(token);
-                var currentuser = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
-                return currentuser.UserName;
-            }
-            catch (Exception ex)
-            {
-
-                return null;
-            }
-         
-        }
-
-
-
     }
 }
