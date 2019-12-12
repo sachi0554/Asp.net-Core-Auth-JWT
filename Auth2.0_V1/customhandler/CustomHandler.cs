@@ -48,37 +48,6 @@ namespace Auth20_V1.customhandler
         }
 
 
-
-        /*  protected Task HandleAsyn(AuthorizationHandlerContext request)
-          {
-
-              var validToken = false;
-              var response = new HttpResponseMessage();
-
-              if (TokenExists(request, out string token))
-              {
-                  try
-                  { validToken = await ValidateTokenAsync(token); } 
-
-                  catch (Exception) { };
-
-                  if (validToken) 
-                  { response = await base.SendAsync(request, cancellationToken); }
-                  else
-                  { response.StatusCode = HttpStatusCode.Unauthorized; }
-              }
-              else
-              {
-                  response.StatusCode = HttpStatusCode.Unauthorized;
-
-                  // Go in Anonymous
-                  response = await base.SendAsync(request, cancellationToken);
-              }
-
-              return response;
-          }*/
-
-
         private  object TokenExists(AuthorizationFilterContext request)
         {
             var tokenres = new TokenRes();

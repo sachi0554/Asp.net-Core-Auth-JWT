@@ -25,6 +25,7 @@ namespace App.Core.Abstract
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly JwtSettings _JwtSettings;
         private readonly ApplicationContext _context;
+       // private IRepository<RefreshToken> customers;
         private readonly IDistributedCache _responseCacheService;
         public IdentityServices(UserManager<ApplicationUser> userManager, JwtSettings jwtSettings, ApplicationContext context, RoleManager<IdentityRole> roleManager, TokenValidationParameters tokenValidationParameters, IDistributedCache responseCacheService)
         {
@@ -157,12 +158,6 @@ namespace App.Core.Abstract
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.Parse(_JwtSettings.TokenLifetime.ToString())
             }); 
-            /* return new AuthenticationResult
-             {
-                 Success = true,
-                 Token = tokenHandler.WriteToken(token),
-                 RefreshToken = refreshToken.Token
-             };*/
             return TokenResponse;
         }
 
@@ -228,7 +223,7 @@ namespace App.Core.Abstract
             try
             {
                 var validatedToken = GetPrincipalFromToken(token);
-                var currentuser = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "jti").Value);
+                var currentuser = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
                 return currentuser.UserName;
             }
             catch (Exception ex)

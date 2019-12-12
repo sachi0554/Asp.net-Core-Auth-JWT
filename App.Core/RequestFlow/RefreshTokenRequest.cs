@@ -1,10 +1,11 @@
-﻿using System;
+﻿using App.Core.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace App.Core.RequestFlow
 {
-    public class RefreshTokenRequest
+    public class RefreshTokenRequest :BaseEntity 
     {
         public string Token { get; set; }
 

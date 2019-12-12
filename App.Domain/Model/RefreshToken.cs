@@ -7,7 +7,7 @@ using System.Text;
 
 namespace App.Domain.Model
 {
-    public class RefreshToken
+    public class RefreshToken 
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

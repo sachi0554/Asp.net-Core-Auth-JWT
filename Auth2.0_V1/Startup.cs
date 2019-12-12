@@ -42,6 +42,7 @@ namespace Auth20_V1
                 IdentityModelEventSource.ShowPII = true;
             }
 
+           
             app.UseCors();
             app.UseHttpsRedirection();
             /*app.UseMiddleware<CustomMiddleware>();*/

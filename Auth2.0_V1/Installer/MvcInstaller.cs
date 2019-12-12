@@ -32,13 +32,13 @@ namespace Auth20_V1.Installer
 
             services.AddCors(options =>
             {
-                options.AddPolicy("CustomCorss",
+                options.AddPolicy("AllowOrigin",
                 builder =>
                 {
-                    builder.WithOrigins("https://localhost:5000",
-                                        "http://www.localhost:5000")
+                    builder.WithOrigins("https://localhost:5000/")
                                         .AllowAnyHeader()
-                                        .AllowAnyMethod();
+                                        .AllowAnyMethod()  
+                                        .AllowCredentials();
                 });
             });
             services.AddMvc(options =>

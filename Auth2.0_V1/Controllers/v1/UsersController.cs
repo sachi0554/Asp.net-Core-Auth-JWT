@@ -15,6 +15,7 @@ using Auth20_V1.Cache;
 using Auth20_V1.Routes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +33,7 @@ namespace Auth20_V1.Controllers.v1
 
         [Authorize]
         [HttpGet("api/RedisCacheTesting")]
+        [Cached(60)]
         public IActionResult Get()
         {
             var stopwatch = new Stopwatch();
@@ -55,10 +57,12 @@ namespace Auth20_V1.Controllers.v1
 
                 return BadRequest(new { error = "something went wrong"});
             }
-            
-        }
 
+        }
+        
+       
         [HttpPost(ApiRoute.Users.Login)]
+        [EnableCors("AllowOrigin")]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
             var authResponse = await _identityService.LoginAsync(request.Email, request.Password);
