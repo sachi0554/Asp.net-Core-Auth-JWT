@@ -8,6 +8,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Auth20_V1.Installer;
 using Microsoft.IdentityModel.Logging;
 using Auth20_V1.customhandler;
+using Auth20_V1.Middleware;
 
 namespace Auth20_V1
 {
@@ -25,7 +26,7 @@ namespace Auth20_V1
         {
             // IInstaller class inject the services 
             var installers = typeof(Startup).Assembly.ExportedTypes.Where(x =>
-               typeof(IInstaller).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance).Cast<IInstaller>().ToList();
+               typeof(IService).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance).Cast<IService>().ToList();
 
             installers.ForEach(installer => installer.InstallerService(services, Configuration));
              
@@ -45,7 +46,12 @@ namespace Auth20_V1
            
             app.UseCors();
             app.UseHttpsRedirection();
-            /*app.UseMiddleware<CustomMiddleware>();*/
+
+            app.UseWhen(context => context.Request.Path.StartsWithSegments("/api"), appBuilder =>
+            {
+                appBuilder.UseMiddleware<RedisTokenValidation>();
+            });
+          //  app.UseMiddleware<RedisTokenValidation>();
             app.UseAuthentication();
 
             // swagger configruation 

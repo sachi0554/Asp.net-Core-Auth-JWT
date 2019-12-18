@@ -1,6 +1,5 @@
 ﻿using App.Core.Contract;
 using App.Core.RequestFlow;
-using App.Domain.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -14,6 +13,7 @@ using System.Data.Entity;
 using System.Linq;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Caching.Distributed;
+using App.Core.Model;
 
 namespace App.Core.Abstract
 {
@@ -24,14 +24,15 @@ namespace App.Core.Abstract
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly JwtSettings _JwtSettings;
-        private readonly ApplicationContext _context;
-       // private IRepository<RefreshToken> customers;
+       // private readonly ApplicationContext _context;
+        IRepository<RefreshToken> _refreshToken;
         private readonly IDistributedCache _responseCacheService;
-        public IdentityServices(UserManager<ApplicationUser> userManager, JwtSettings jwtSettings, ApplicationContext context, RoleManager<IdentityRole> roleManager, TokenValidationParameters tokenValidationParameters, IDistributedCache responseCacheService)
+        public IdentityServices(UserManager<ApplicationUser> userManager, JwtSettings jwtSettings, IRepository<RefreshToken> repository /*ApplicationContext context*/, RoleManager<IdentityRole> roleManager, TokenValidationParameters tokenValidationParameters, IDistributedCache responseCacheService)
         {
             _userManager = userManager;
             _JwtSettings = jwtSettings;
-            _context = context;
+            // _context = context;
+            _refreshToken = repository;
             _roleManager = roleManager;
             _tokenValidationParameters = tokenValidationParameters;
             _responseCacheService = responseCacheService;
@@ -145,8 +146,8 @@ namespace App.Core.Abstract
                 ExpiryDate = DateTime.UtcNow.AddMonths(6)
             };
 
-            await _context.RefreshTokens.AddAsync(refreshToken);
-            await _context.SaveChangesAsync();
+             _refreshToken.Insert(refreshToken);
+            await _refreshToken.Commit();
             var TokenResponse = new AuthenticationResult
             {
                 Success = true,
@@ -183,7 +184,7 @@ namespace App.Core.Abstract
 
             var jti = validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
-            var storedRefreshToken = _context.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken);
+            var storedRefreshToken = _refreshToken.Collection().SingleOrDefault(x => x.Token == refreshToken);
 
             if (storedRefreshToken == null)
             {
@@ -211,8 +212,8 @@ namespace App.Core.Abstract
             }
 
             storedRefreshToken.Used = true;
-            _context.RefreshTokens.Update(storedRefreshToken);
-            await _context.SaveChangesAsync();
+            _refreshToken.Update(storedRefreshToken);
+            await _refreshToken.Commit();
 
             var user = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
             return await GenerateAuthenticationResultForUserAsync(user);

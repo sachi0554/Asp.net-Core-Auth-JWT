@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace App.DataAccess
 {
@@ -24,7 +25,7 @@ namespace App.DataAccess
             return dbSet;
         }
 
-        public async void Commit()
+        public async Task Commit()
         {
            await  context.SaveChangesAsync();
         }

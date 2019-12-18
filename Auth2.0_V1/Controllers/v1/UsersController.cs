@@ -61,7 +61,7 @@ namespace Auth20_V1.Controllers.v1
         }
         
        
-        [HttpPost(ApiRoute.Users.Login)]
+        [HttpPost("Account/login")]
         [EnableCors("AllowOrigin")]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
@@ -82,7 +82,7 @@ namespace Auth20_V1.Controllers.v1
             });
         }
         /* [Route("api/register")]*/
-        [HttpPost(ApiRoute.Users.Register)]
+        [HttpPost("Account/register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
         {
            

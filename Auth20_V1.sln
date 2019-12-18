@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.Core", "App.Core\App.Co
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "App.SqlProject", "App.SqlProject\App.SqlProject.sqlproj", "{0FB8FCCE-6FF4-4119-AB43-0BF01C4FF4D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.DataAccess", "App.DataAccess\App.DataAccess.csproj", "{1775AAC8-5245-4D80-BD6D-F98CD134F4DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.DataAccess", "App.DataAccess\App.DataAccess.csproj", "{1775AAC8-5245-4D80-BD6D-F98CD134F4DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

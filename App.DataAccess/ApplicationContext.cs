@@ -1,4 +1,5 @@
-﻿using App.Domain.Model;
+﻿
+using App.Core.Model;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -14,7 +15,9 @@ namespace App.DataAccess
 
         }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<UserClaims> UserClaim { get; set; }
-       
+        public DbSet<Game> Game { get; set; }
+
     }
 }
