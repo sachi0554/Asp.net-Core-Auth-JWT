@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <UserSecretsId>aspnet-Auth2._0_V1-3773422B-48B4-41EB-881F-6BC9A8E3AF9D</UserSecretsId>
     <NoWin32Manifest>true</NoWin32Manifest>
     <DocumentationFile>bin\Debug\netcoreapp2.1\swagger.xml</DocumentationFile>
