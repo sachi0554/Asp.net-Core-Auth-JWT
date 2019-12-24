@@ -1,8 +1,8 @@
-FROM microsoft/aspnetcore:2.2 AS base
+FROM microsoft/dotnet:2.2-sdk as build
 WORKDIR /app
 EXPOSE 80
 
-FROM microsoft/aspnetcore-build:2.2 AS build
+FROM microsoft/dotnet:2.2-aspnetcore-runtime
 WORKDIR /src
 COPY Auth20_V1.sln ./
 COPY Auth20_V1/*.csproj ./WebAPIProject/
