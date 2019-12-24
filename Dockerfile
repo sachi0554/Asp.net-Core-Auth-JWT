@@ -1,16 +1,17 @@
-FROM microsoft/dotnet:2.2-sdk as build
+FROM microsoft/dotnet:2.2-aspnetcore-runtime-stretch-slim AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 5000
 
-FROM microsoft/dotnet:2.2-aspnetcore-runtime
+FROM microsoft/dotnet:2.2-sdk-stretch AS build
 WORKDIR /src
-COPY Auth20_V1.sln ./
-COPY Auth20_V1/*.csproj ./WebAPIProject/
 
+COPY ./*.sln ./
+
+COPY */*.csproj ./
+RUN for file in $(ls *.csproj); do mkdir -p ${file%.*} && mv $file ${file%.*}; done
 RUN dotnet restore
-COPY . .
 
-WORKDIR /src/WebAPIProject
+COPY . ./
 RUN dotnet build -c Release -o /app
 
 FROM build AS publish
@@ -19,4 +20,6 @@ RUN dotnet publish -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+
+ENV ASPNETCORE_URLS="http://*:5000"
 ENTRYPOINT ["dotnet", "Auth2.0_V1.dll"]
