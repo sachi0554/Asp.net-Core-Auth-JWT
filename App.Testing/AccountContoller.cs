@@ -62,7 +62,7 @@ namespace App.Testing
         {
             var response = await TestClient.PostAsJsonAsync("Account/register", new UserRegistrationRequest
             {
-                Email = "testk27r3@demo.com",
+                Email = "testk27r32@demo.com",
                 Password = "kill@34343Bill",
                 PhoneNumber="8687314864",
                 FirstName="demo",

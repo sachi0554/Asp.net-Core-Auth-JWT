@@ -66,7 +66,7 @@ namespace App.Testing
         [Fact]
         public async void Game_on_Delete_success()
         {
-            string id = "fb305583-391b-4703-8acb-e466218213c4";
+            string id = "5d224ebf-ed51-41df-90b7-ec8c3c0bb6cd";
             await AuthenticateAsync();
             var response = await TestClient.DeleteAsync("Api/game/id?id=" + id);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -84,7 +84,7 @@ namespace App.Testing
         [Fact]
         public async void Get_game_by_id_on_success()
         {
-            string id = "fb305583-391b-4703-8acb-e466218213c4";
+            string id = "4f6b3785-011b-4b93-862b-4ab36de95811";
             await AuthenticateAsync();
             var response = await TestClient.GetAsync("api/game/id?id="+id);
 
