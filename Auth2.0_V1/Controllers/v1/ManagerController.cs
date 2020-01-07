@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using App.Core.Contract;
-using App.Domain.Model;
+using App.Core.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +19,7 @@ namespace Auth20_V1.Controllers.v1
         {
             _manager = manager;
         }
-        [Authorize(Policy = "Crud")]
+       /* [Authorize(Policy = "Crud")]*/
         [HttpPost("api/CreateRole")]
         public async Task<IActionResult> CreateRole(string roleName)
         {

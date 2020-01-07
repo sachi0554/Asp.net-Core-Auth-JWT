@@ -77,5 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Publish\App.SqlProject.publish.xml" />
+    <None Include="App.SqlProject.publish.xml" />
   </ItemGroup>
 </Project>

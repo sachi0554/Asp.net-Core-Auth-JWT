@@ -1,4 +1,5 @@
-﻿using App.Domain.Model;
+﻿
+using App.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;

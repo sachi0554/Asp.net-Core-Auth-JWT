@@ -1,13 +1,9 @@
 ﻿using App.Core.Contract;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
-using App.Domain.Model;
 using System.Security.Claims;
-using App.Domain;
-using System.Data.Entity;
+using App.Core.Model;
+using Microsoft.AspNetCore.Identity;
 
 namespace App.Core.Abstract
 {

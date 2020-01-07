@@ -58,13 +58,15 @@ namespace App.Testing
             var data = await response.Content.ReadAsStringAsync();
             List<Game> game = JsonConvert.DeserializeObject<List<Game>>(data);
             // Assert
-            Assert.Equal(10, game.Count);
+            var count = game.Count;
+            Console.WriteLine(count);
+            Assert.Equal(2, count);
         }
 
         [Fact]
         public async void Game_on_Delete_success()
         {
-            string id = "041538d2-0f6b-4d42-9902-02b179899539";
+            string id = "fb305583-391b-4703-8acb-e466218213c4";
             await AuthenticateAsync();
             var response = await TestClient.DeleteAsync("Api/game/id?id=" + id);
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -72,7 +74,7 @@ namespace App.Testing
 
         [Fact]
         public async void Game_on_Delete_not_found()
-        {
+        { 
             string id = "041538d2-0f6b-4d42-9902-02b179899539";
             await AuthenticateAsync();
             var response = await TestClient.DeleteAsync("Api/game/id?id=" + id);
@@ -82,7 +84,7 @@ namespace App.Testing
         [Fact]
         public async void Get_game_by_id_on_success()
         {
-            string id = "dc1a9bec-4d83-44d2-8356-9651ac93a7cb";
+            string id = "fb305583-391b-4703-8acb-e466218213c4";
             await AuthenticateAsync();
             var response = await TestClient.GetAsync("api/game/id?id="+id);
 

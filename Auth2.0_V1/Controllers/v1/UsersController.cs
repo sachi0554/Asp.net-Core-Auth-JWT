@@ -83,10 +83,10 @@ namespace Auth20_V1.Controllers.v1
         }
         /* [Route("api/register")]*/
         [HttpPost("Account/register")]
-        public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
+        public async Task<IActionResult> Register([FromBody] UserRegistrationRequest model)
         {
            
-            var authResponse = await _identityService.RegisterAsync(request.Email, request.Password);
+            var authResponse = await _identityService.RegisterAsync(model);
 
             if (!authResponse.Success)
             {

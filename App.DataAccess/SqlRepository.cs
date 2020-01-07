@@ -1,4 +1,5 @@
-﻿using App.Core.Abstract;
+﻿using App.Core;
+using App.Core.Abstract;
 using App.Core.Contract;
 using Microsoft.EntityFrameworkCore;
 using System;

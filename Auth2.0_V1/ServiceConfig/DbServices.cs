@@ -3,10 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using System;
-using App.Core.Contract;
-using App.DataAccess;
 using App.Core.Model;
+using App.Core;
 
 namespace Auth20_V1.Installer
 {
@@ -17,8 +15,13 @@ namespace Auth20_V1.Installer
             // context Register on IServiceCollection 
 
             services.AddDbContext<ApplicationContext>(options =>
-              options.UseSqlServer(
-                  configuration.GetConnectionString("DefaultConnection")));
+
+            // mysql for 
+              options.UseMySql(
+                  configuration.GetConnectionString("mysqlConnection")));
+            // sql server database 
+            /*  options.UseSqlServer(
+                   configuration.GetConnectionString("DefaultConnection")));*/
 
             //Register Idenity Services 
             services.AddDefaultIdentity<ApplicationUser>()

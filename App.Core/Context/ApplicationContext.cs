@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Text;
 
-namespace App.DataAccess
+namespace App.Core
 {
     public class ApplicationContext : IdentityDbContext<ApplicationUser>
     {

@@ -49,7 +49,10 @@ namespace App.Testing
             var response = await TestClient.PostAsJsonAsync("Account/register", new UserRegistrationRequest
             {
                 Email = "",
-                Password = ""
+                Password = "",
+                PhoneNumber="",
+                FirstName="",
+                LastName=""
             });
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
@@ -59,8 +62,11 @@ namespace App.Testing
         {
             var response = await TestClient.PostAsJsonAsync("Account/register", new UserRegistrationRequest
             {
-                Email = "testk233@demo.com",
-                Password = "kill@34343Bill"
+                Email = "testk27r3@demo.com",
+                Password = "kill@34343Bill",
+                PhoneNumber="8687314864",
+                FirstName="demo",
+                LastName="demo"
             });
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var registrationResponse = await response.Content.ReadAsAsync<AuthSuccessResponse>();

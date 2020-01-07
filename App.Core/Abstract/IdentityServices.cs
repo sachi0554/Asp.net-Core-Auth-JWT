@@ -1,6 +1,5 @@
 ﻿using App.Core.Contract;
 using App.Core.RequestFlow;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,12 +7,11 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using App.Domain;
-using System.Data.Entity;
 using System.Linq;
-using Newtonsoft.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using App.Core.Model;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.Core.Abstract
 {
@@ -63,9 +61,9 @@ namespace App.Core.Abstract
             return await GenerateAuthenticationResultForUserAsync(user);
         }
 
-        public async Task<AuthenticationResult> RegisterAsync(string email, string password)
+        public async Task<AuthenticationResult> RegisterAsync(UserRegistrationRequest request)
         {
-            var exsitingUser = await _userManager.FindByEmailAsync(email);
+            var exsitingUser = await _userManager.FindByEmailAsync(request.Email);
             if (exsitingUser != null)
             {
                 return new AuthenticationResult
@@ -76,11 +74,14 @@ namespace App.Core.Abstract
 
             var newUser = new ApplicationUser
             {
-                Email = email,
-                UserName = email
+                UserName = request.Email,
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                PhoneNumber = request.PhoneNumber
             };
 
-            var createUser = await _userManager.CreateAsync(newUser, password);
+            var createUser = await _userManager.CreateAsync(newUser, request.Password);
             if (!createUser.Succeeded)
             {
                 return new AuthenticationResult
